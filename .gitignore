@@ -1,5 +1,7 @@
 node_modules/
+.next/
 .wwebjs_auth/
 .wwebjs_cache/
 .baileys_auth/
 baileys-store.json
+server*.log

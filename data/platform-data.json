@@ -1,0 +1,151 @@
+{
+  "workspaces": [
+    {
+      "id": "workspace-shlomo-demo",
+      "name": "Shlomo Popovitz - Workspace Demo",
+      "slug": "shlomo-demo",
+      "owner_name": "Shlomo Popovitz",
+      "owner_phone": "054-246-6340",
+      "owner_email": "aknvpupuch@gmail.com",
+      "status": "active",
+      "subscription_tier": "PRO",
+      "usage_counter": 227,
+      "monthly_quota": 500,
+      "has_telegram": true,
+      "has_twitter": true,
+      "has_group_status": true,
+      "has_wa_channels": true,
+      "has_scheduling": true,
+      "has_contact_saver": true,
+      "golden_hour": "19:30",
+      "shabbat_blocker": true,
+      "anti_ban_mode": "medium",
+      "created_at": "2026-04-20T08:30:00.000Z"
+    },
+    {
+      "id": "workspace-pending-vip",
+      "name": "VIP Pending Workspace",
+      "slug": "vip-pending",
+      "owner_name": "לקוח חדש",
+      "owner_phone": "050-123-4567",
+      "owner_email": "new-customer@example.com",
+      "status": "pending_approval",
+      "subscription_tier": "VIP Pending",
+      "usage_counter": 0,
+      "monthly_quota": 500,
+      "has_telegram": false,
+      "has_twitter": false,
+      "has_group_status": true,
+      "has_wa_channels": false,
+      "has_scheduling": false,
+      "has_contact_saver": false,
+      "golden_hour": "18:45",
+      "shabbat_blocker": true,
+      "anti_ban_mode": "slow",
+      "created_at": "2026-04-23T12:00:00.000Z"
+    }
+  ],
+  "users": [
+    {
+      "id": "user-shlomo-admin",
+      "workspace_id": "workspace-shlomo-demo",
+      "name": "Shlomo Popovitz",
+      "email": "aknvpupuch@gmail.com",
+      "phone": "054-246-6340",
+      "role": "super_admin",
+      "status": "approved",
+      "auth_provider": "google",
+      "created_at": "2026-04-20T08:30:00.000Z"
+    },
+    {
+      "id": "user-vip-pending",
+      "workspace_id": "workspace-pending-vip",
+      "name": "לקוח חדש",
+      "email": "new-customer@example.com",
+      "phone": "050-123-4567",
+      "role": "owner",
+      "status": "pending_approval",
+      "auth_provider": "credentials",
+      "created_at": "2026-04-23T12:00:00.000Z"
+    }
+  ],
+  "transfers": [
+    {
+      "id": "transfer-1",
+      "workspace_id": "workspace-shlomo-demo",
+      "name": "מבצע ערב",
+      "trigger_source": "קבוצת טריגר ראשית",
+      "channels": [
+        "WhatsApp Groups",
+        "WhatsApp Group Status",
+        "Telegram Channel",
+        "X"
+      ],
+      "order": [
+        "WhatsApp Groups",
+        "WhatsApp Group Status",
+        "Telegram Channel",
+        "X"
+      ],
+      "anti_ban_mode": "medium",
+      "shabbat_blocker": true,
+      "status": "awaiting_approval",
+      "view_count": 173,
+      "click_count": 41,
+      "created_at": "2026-04-22T18:45:00.000Z"
+    },
+    {
+      "id": "transfer-2",
+      "workspace_id": "workspace-shlomo-demo",
+      "name": "עדכון בוקר",
+      "trigger_source": "בוט מערכת",
+      "channels": [
+        "WhatsApp Groups",
+        "Personal Status"
+      ],
+      "order": [
+        "Personal Status",
+        "WhatsApp Groups"
+      ],
+      "anti_ban_mode": "fast",
+      "shabbat_blocker": false,
+      "status": "scheduled",
+      "view_count": 89,
+      "click_count": 12,
+      "created_at": "2026-04-23T07:15:00.000Z"
+    }
+  ],
+  "invoices": [
+    {
+      "id": "invoice-1001",
+      "workspace_id": "workspace-shlomo-demo",
+      "customer_name": "Shlomo Popovitz",
+      "file_name": "invoice-april.pdf",
+      "pdf_url": "/public/invoice-april.pdf",
+      "sent_via_whatsapp": true,
+      "sent_via_email": true,
+      "created_at": "2026-04-21T09:15:00.000Z"
+    }
+  ],
+  "affiliates": [
+    {
+      "id": "affiliate-1",
+      "workspace_id": "workspace-shlomo-demo",
+      "referrer_name": "Shlomo Popovitz",
+      "referral_code": "SHLOMO-PRO",
+      "referred_count": 4,
+      "created_at": "2026-04-20T08:30:00.000Z"
+    }
+  ],
+  "link_clicks": [
+    {
+      "id": "click-1",
+      "workspace_id": "workspace-shlomo-demo",
+      "transfer_id": "transfer-1",
+      "group_id": "120363427661233741@g.us",
+      "short_code": "aurora-1",
+      "clicks": 19,
+      "created_at": "2026-04-22T19:05:00.000Z"
+    }
+  ]
+}
