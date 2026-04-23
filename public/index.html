@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>לוח בקרה ל-WhatsApp Bot</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f2f6f6;
+        --panel: #ffffff;
+        --panel-alt: #f8fbfb;
+        --border: #d7e2e1;
+        --text: #132221;
+        --muted: #58706d;
+        --accent: #0f7a63;
+        --accent-strong: #0b5f4d;
+        --accent-soft: #e6f4f0;
+        --connected: #1a8f59;
+        --auth: #ba7f12;
+        --disconnected: #d63c3c;
+        --shadow: 0 14px 38px rgba(18, 34, 33, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        margin: 0;
+        min-height: 100%;
+      }
+
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background:
+          radial-gradient(circle at top right, rgba(15, 122, 99, 0.08), transparent 28%),
+          linear-gradient(180deg, #f8fbfb 0%, var(--bg) 100%);
+        color: var(--text);
+      }
+
+      main {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 28px 18px 44px;
+      }
+
+      .hero {
+        display: grid;
+        gap: 10px;
+        margin-bottom: 22px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        width: fit-content;
+        padding: 7px 12px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent-strong);
+        font-size: 0.88rem;
+        font-weight: 700;
+      }
+
+      h1,
+      h2,
+      h3 {
+        margin: 0;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        font-size: 2rem;
+        line-height: 1.1;
+      }
+
+      .hero p,
+      .panel-subtitle,
+      .meta-label,
+      .helper,
+      .list-empty,
+      .list-note {
+        color: var(--muted);
+      }
+
+      .layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.2fr) minmax(320px, 380px);
+        gap: 18px;
+        align-items: start;
+      }
+
+      .panel {
+        background: var(--panel);
+        border: 1px solid rgba(215, 226, 225, 0.95);
+        border-radius: 8px;
+        box-shadow: var(--shadow);
+      }
+
+      .panel-inner {
+        padding: 20px;
+      }
+
+      .panel-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 20px;
+      }
+
+      .panel-title-group {
+        display: grid;
+        gap: 6px;
+      }
+
+      .status-stack {
+        display: grid;
+        gap: 16px;
+      }
+
+      .status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        width: fit-content;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: #edf5f3;
+        font-weight: 700;
+      }
+
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--disconnected);
+      }
+
+      .connected .status-dot {
+        background: var(--connected);
+      }
+
+      .authenticating .status-dot {
+        background: var(--auth);
+      }
+
+      .disconnected .status-dot {
+        background: var(--disconnected);
+      }
+
+      .meta-grid {
+        display: grid;
+        gap: 12px;
+      }
+
+      .meta-row {
+        display: grid;
+        gap: 4px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #edf2f1;
+      }
+
+      .meta-row:last-child {
+        border-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      .meta-label {
+        font-size: 0.86rem;
+      }
+
+      .meta-value {
+        font-weight: 600;
+        word-break: break-word;
+      }
+
+      .qr-wrap {
+        min-height: 320px;
+        display: grid;
+        place-items: center;
+        border: 1px dashed var(--border);
+        border-radius: 8px;
+        background: var(--panel-alt);
+        padding: 16px;
+      }
+
+      .qr-wrap img {
+        width: min(100%, 296px);
+        height: auto;
+        display: block;
+      }
+
+      .qr-empty {
+        text-align: center;
+        line-height: 1.6;
+        max-width: 280px;
+      }
+
+      form {
+        display: grid;
+        gap: 18px;
+      }
+
+      .field {
+        display: grid;
+        gap: 10px;
+      }
+
+      .field-head {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .field-head label,
+      .field-head span:first-child,
+      .toggle-row span:last-child {
+        font-weight: 700;
+      }
+
+      .field-meta {
+        font-size: 0.86rem;
+        color: var(--muted);
+      }
+
+      select {
+        width: 100%;
+        min-height: 48px;
+        padding: 12px 14px;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #ffffff;
+        color: var(--text);
+        font: inherit;
+      }
+
+      select:disabled {
+        background: #f4f7f7;
+        color: #7a8e8b;
+      }
+
+      .picker-shell {
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: #ffffff;
+        overflow: hidden;
+      }
+
+      .option-list {
+        max-height: 248px;
+        overflow-y: auto;
+        padding: 6px;
+        background: linear-gradient(180deg, #ffffff 0%, #fbfdfd 100%);
+      }
+
+      .option-item {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 12px;
+        align-items: start;
+        padding: 12px;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+
+      .option-item:hover {
+        background: #f2f7f6;
+      }
+
+      .option-item input {
+        width: 18px;
+        height: 18px;
+        margin: 2px 0 0;
+        accent-color: var(--accent);
+      }
+
+      .option-content {
+        display: grid;
+        gap: 4px;
+        min-width: 0;
+      }
+
+      .option-title {
+        font-weight: 600;
+        word-break: break-word;
+      }
+
+      .option-subtitle {
+        font-size: 0.84rem;
+        color: var(--muted);
+        word-break: break-word;
+      }
+
+      .option-item.unavailable .option-title {
+        color: #7a5140;
+      }
+
+      .list-empty {
+        padding: 16px;
+        line-height: 1.6;
+      }
+
+      .list-note {
+        padding: 0 2px;
+        font-size: 0.86rem;
+      }
+
+      .toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      button {
+        min-height: 44px;
+        padding: 11px 16px;
+        border: 0;
+        border-radius: 8px;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+
+      .button-primary {
+        color: #ffffff;
+        background: var(--accent);
+      }
+
+      .button-primary:hover:enabled {
+        background: var(--accent-strong);
+      }
+
+      .button-secondary {
+        color: var(--accent-strong);
+        background: #eef7f4;
+        border: 1px solid #cfe5df;
+      }
+
+      .button-secondary:hover:enabled {
+        background: #e2f1ec;
+      }
+
+      .form-footer {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+      }
+
+      .toggle-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .toggle-row input {
+        width: 20px;
+        height: 20px;
+        margin: 0;
+        accent-color: var(--accent);
+      }
+
+      .message {
+        min-height: 24px;
+        font-weight: 600;
+      }
+
+      .message.success {
+        color: var(--connected);
+      }
+
+      .message.error {
+        color: var(--disconnected);
+      }
+
+      @media (max-width: 980px) {
+        .layout {
+          grid-template-columns: 1fr;
+        }
+
+        .panel-head,
+        .field-head,
+        .form-footer {
+          align-items: stretch;
+        }
+
+        .panel-head,
+        .field-head {
+          flex-direction: column;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header class="hero">
+        <span class="eyebrow">WhatsApp Automation</span>
+        <h1>לוח בקרה לניהול הקבוצות, אנשי הקשר והסטטוס</h1>
+        <p>אחרי שהבוט מתחבר, המערכת טוענת אוטומטית את הקבוצות ואנשי הקשר שלך מ-WhatsApp ומאפשרת לבחור אותם בלי להקליד מזהים ידנית.</p>
+      </header>
+
+      <div class="layout">
+        <section class="panel" aria-labelledby="config-title">
+          <div class="panel-inner">
+            <div class="panel-head">
+              <div class="panel-title-group">
+                <h2 id="config-title">הגדרות שידור</h2>
+                <p class="panel-subtitle">בחר קבוצת מקור, רשימת שולחים מורשים, קבוצות יעד והאם לפרסם גם לסטטוס.</p>
+              </div>
+              <div class="toolbar">
+                <button id="refreshDataButton" class="button-secondary" type="button">רענון נתונים</button>
+              </div>
+            </div>
+
+            <form id="configForm">
+              <div class="field">
+                <div class="field-head">
+                  <label for="triggerGroupId">קבוצת טריגר</label>
+                  <span id="groupsState" class="field-meta">הקבוצות ייטענו אחרי חיבור מלא</span>
+                </div>
+                <select id="triggerGroupId" name="TRIGGER_GROUP_ID"></select>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span>אנשי קשר מורשים</span>
+                  <span id="contactsState" class="field-meta">אנשי הקשר יוצגו כאן אחרי החיבור</span>
+                </div>
+                <div class="picker-shell">
+                  <div id="authorizedContactsList" class="option-list" aria-live="polite"></div>
+                </div>
+                <div class="list-note">הבחירה נשמרת כ-IDs של WhatsApp ב-<code>config.json</code>, אבל הסינון בבוט עדיין תומך גם במספרים ישנים שכבר נשמרו.</div>
+              </div>
+
+              <div class="field">
+                <div class="field-head">
+                  <span>קבוצות יעד</span>
+                  <span id="targetsState" class="field-meta">קבוצות היעד יופיעו כאן אחרי החיבור</span>
+                </div>
+                <div class="picker-shell">
+                  <div id="targetGroupsList" class="option-list" aria-live="polite"></div>
+                </div>
+              </div>
+
+              <div class="form-footer">
+                <label class="toggle-row" for="postToStatus">
+                  <input id="postToStatus" name="POST_TO_STATUS" type="checkbox" />
+                  <span>לפרסם גם לסטטוס של WhatsApp</span>
+                </label>
+              </div>
+
+              <div class="form-footer">
+                <button class="button-primary" type="submit">שמירת הגדרות</button>
+                <div id="saveMessage" class="message" role="status" aria-live="polite"></div>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <aside class="panel" aria-labelledby="status-title">
+          <div class="panel-inner status-stack">
+            <div class="panel-title-group">
+              <h2 id="status-title">מצב הבוט</h2>
+              <p class="panel-subtitle">מציג את מצב החיבור ל-WhatsApp, QR בעת הצורך, וזמינות הנתונים לטעינה.</p>
+            </div>
+
+            <div id="statusPill" class="status-pill disconnected">
+              <span class="status-dot" aria-hidden="true"></span>
+              <span id="statusText">מנותק</span>
+            </div>
+
+            <div class="meta-grid">
+              <div class="meta-row">
+                <span class="meta-label">מצב WhatsApp</span>
+                <span id="rawState" class="meta-value">-</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">מצב סשן</span>
+                <span id="sessionMode" class="meta-value">LocalAuth</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">חיבור נתונים</span>
+                <span id="directoryState" class="meta-value">ממתין</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">פעילות אחרונה</span>
+                <span id="lastActivity" class="meta-value">-</span>
+              </div>
+              <div class="meta-row">
+                <span class="meta-label">שגיאה אחרונה</span>
+                <span id="lastError" class="meta-value">ללא</span>
+              </div>
+            </div>
+
+            <div id="qrWrap" class="qr-wrap">
+              <div class="qr-empty">כאשר WhatsApp יבקש אימות, קוד ה-QR יוצג כאן אוטומטית.</div>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <script>
+      const DEFAULT_CONFIG = {
+        TRIGGER_GROUP_ID: '',
+        AUTHORIZED_NUMBERS: [],
+        TARGET_GROUP_IDS: [],
+        POST_TO_STATUS: false
+      };
+
+      const STATUS_LABELS = {
+        Connected: 'מחובר',
+        Authenticating: 'מתחבר',
+        Disconnected: 'מנותק'
+      };
+
+      const state = {
+        status: {
+          connectionStatus: 'Disconnected'
+        },
+        config: { ...DEFAULT_CONFIG },
+        groups: [],
+        contacts: [],
+        directoryLoaded: false,
+        directoryLoading: false,
+        directoryAttemptedSinceConnect: false,
+        statusPolling: false
+      };
+
+      const statusPill = document.getElementById('statusPill');
+      const statusText = document.getElementById('statusText');
+      const rawState = document.getElementById('rawState');
+      const sessionMode = document.getElementById('sessionMode');
+      const directoryState = document.getElementById('directoryState');
+      const lastActivity = document.getElementById('lastActivity');
+      const lastError = document.getElementById('lastError');
+      const qrWrap = document.getElementById('qrWrap');
+      const saveMessage = document.getElementById('saveMessage');
+      const configForm = document.getElementById('configForm');
+      const refreshDataButton = document.getElementById('refreshDataButton');
+      const triggerGroupId = document.getElementById('triggerGroupId');
+      const authorizedContactsList = document.getElementById('authorizedContactsList');
+      const targetGroupsList = document.getElementById('targetGroupsList');
+      const groupsState = document.getElementById('groupsState');
+      const contactsState = document.getElementById('contactsState');
+      const targetsState = document.getElementById('targetsState');
+      const postToStatus = document.getElementById('postToStatus');
+
+      function normalizeId(value) {
+        return String(value || '').trim().toLowerCase();
+      }
+
+      function normalizeNumber(value) {
+        return String(value || '')
+          .replace(/@.+$/i, '')
+          .replace(/\D/g, '');
+      }
+
+      function buildIdentityKeys(value) {
+        const keys = new Set();
+        const raw = normalizeId(value);
+
+        if (!raw) {
+          return keys;
+        }
+
+        keys.add(raw);
+
+        const digits = normalizeNumber(raw);
+
+        if (digits) {
+          keys.add(digits);
+          keys.add(`${digits}@c.us`);
+          keys.add(`${digits}@s.whatsapp.net`);
+        }
+
+        return keys;
+      }
+
+      function hasIdentityMatch(savedValues, optionId) {
+        const optionKeys = buildIdentityKeys(optionId);
+
+        return savedValues.some((savedValue) => {
+          const savedKeys = buildIdentityKeys(savedValue);
+
+          for (const key of savedKeys) {
+            if (optionKeys.has(key)) {
+              return true;
+            }
+          }
+
+          return false;
+        });
+      }
+
+      function getUnmatchedSavedValues(savedValues, options, matcher = (savedValue, option) => savedValue === option.id) {
+        return savedValues.filter((savedValue) => !options.some((option) => matcher(savedValue, option)));
+      }
+
+      function translateStatus(status) {
+        return STATUS_LABELS[status] || status || 'לא ידוע';
+      }
+
+      function showSaveMessage(message, isError) {
+        saveMessage.textContent = message;
+        saveMessage.className = `message ${isError ? 'error' : 'success'}`;
+      }
+
+      function setTextContent(element, value) {
+        element.textContent = value;
+      }
+
+      function renderQrCode(dataUrl) {
+        qrWrap.replaceChildren();
+
+        if (!dataUrl) {
+          const empty = document.createElement('div');
+          empty.className = 'qr-empty';
+          empty.textContent = 'אין כרגע צורך ב-QR. ברגע ש-WhatsApp יבקש אימות, הקוד יוצג כאן אוטומטית.';
+          qrWrap.appendChild(empty);
+          return;
+        }
+
+        const image = document.createElement('img');
+        image.src = dataUrl;
+        image.alt = 'קוד QR של WhatsApp';
+        qrWrap.appendChild(image);
+      }
+
+      function renderStatus() {
+        const status = state.status.connectionStatus || 'Disconnected';
+        const statusClass = status.toLowerCase().replace(/\s+/g, '-');
+        statusPill.className = `status-pill ${statusClass}`;
+        setTextContent(statusText, translateStatus(status));
+        setTextContent(rawState, state.status.rawWhatsappState || '-');
+        setTextContent(sessionMode, state.status.sessionMode || 'LocalAuth');
+        setTextContent(
+          lastActivity,
+          state.status.lastActivityAt ? new Date(state.status.lastActivityAt).toLocaleString('he-IL') : '-'
+        );
+        setTextContent(lastError, state.status.lastError || 'ללא');
+        setTextContent(directoryState, getDirectoryStatusLabel());
+        renderQrCode(state.status.qrCodeDataUrl);
+        updateRefreshButton();
+      }
+
+      function getDirectoryStatusLabel() {
+        if (state.directoryLoading) {
+          return 'טוען קבוצות ואנשי קשר';
+        }
+
+        if (state.status.connectionStatus !== 'Connected') {
+          return 'ממתין לחיבור WhatsApp';
+        }
+
+        if (state.directoryLoaded) {
+          return `נטענו ${state.groups.length} קבוצות ו-${state.contacts.length} אנשי קשר`;
+        }
+
+        return 'מוכן לטעינה';
+      }
+
+      function updateRefreshButton() {
+        const connected = state.status.connectionStatus === 'Connected';
+        refreshDataButton.disabled = !connected || state.directoryLoading;
+        refreshDataButton.textContent = state.directoryLoading ? 'מרענן...' : 'רענון נתונים';
+      }
+
+      function buildGroupOptions() {
+        const groups = [...state.groups];
+        const savedTriggerId = state.config.TRIGGER_GROUP_ID;
+
+        if (savedTriggerId && !groups.some((group) => group.id === savedTriggerId)) {
+          groups.unshift({
+            id: savedTriggerId,
+            name: 'קבוצה שמורה שלא נטענה כרגע',
+            subtitle: savedTriggerId,
+            unavailable: true
+          });
+        }
+
+        return groups;
+      }
+
+      function buildTargetGroupOptions() {
+        const options = [...state.groups];
+        const unmatched = getUnmatchedSavedValues(
+          state.config.TARGET_GROUP_IDS,
+          options,
+          (savedValue, option) => savedValue === option.id
+        );
+
+        unmatched.forEach((id) => {
+          options.push({
+            id,
+            name: 'קבוצת יעד שמורה שלא נטענה כרגע',
+            subtitle: id,
+            unavailable: true
+          });
+        });
+
+        return options;
+      }
+
+      function buildContactOptions() {
+        const options = [...state.contacts];
+        const unmatched = getUnmatchedSavedValues(
+          state.config.AUTHORIZED_NUMBERS,
+          options,
+          (savedValue, option) => hasIdentityMatch([savedValue], option.id)
+        );
+
+        unmatched.forEach((id) => {
+          options.push({
+            id,
+            name: 'איש קשר שמור שלא נטען כרגע',
+            subtitle: id,
+            unavailable: true
+          });
+        });
+
+        return options;
+      }
+
+      function renderTriggerGroupSelect() {
+        const options = buildGroupOptions();
+        const connected = state.status.connectionStatus === 'Connected';
+
+        triggerGroupId.replaceChildren();
+
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = connected ? 'בחר קבוצת מקור' : 'התחבר ל-WhatsApp כדי לבחור קבוצה';
+        triggerGroupId.appendChild(placeholder);
+
+        options.forEach((group) => {
+          const option = document.createElement('option');
+          option.value = group.id;
+          option.textContent = group.unavailable ? `${group.name} (${group.id})` : group.name;
+          if (group.id === state.config.TRIGGER_GROUP_ID) {
+            option.selected = true;
+          }
+          triggerGroupId.appendChild(option);
+        });
+
+        triggerGroupId.disabled = !connected || (!options.length && !state.config.TRIGGER_GROUP_ID);
+
+        if (connected) {
+          setTextContent(groupsState, options.length ? `זוהו ${state.groups.length} קבוצות` : 'לא נמצאו קבוצות זמינות');
+        } else {
+          setTextContent(groupsState, 'הקבוצות נטענות רק אחרי שהבוט מחובר');
+        }
+      }
+
+      function renderCheckboxList(container, options, selectedValues, emptyMessage, fieldName, matcher) {
+        container.replaceChildren();
+
+        if (!options.length) {
+          const empty = document.createElement('div');
+          empty.className = 'list-empty';
+          empty.textContent = emptyMessage;
+          container.appendChild(empty);
+          return;
+        }
+
+        options.forEach((item) => {
+          const label = document.createElement('label');
+          label.className = `option-item${item.unavailable ? ' unavailable' : ''}`;
+
+          const input = document.createElement('input');
+          input.type = 'checkbox';
+          input.name = fieldName;
+          input.value = item.id;
+          input.checked = matcher(selectedValues, item);
+
+          const content = document.createElement('span');
+          content.className = 'option-content';
+
+          const title = document.createElement('span');
+          title.className = 'option-title';
+          title.textContent = item.name;
+
+          const subtitle = document.createElement('span');
+          subtitle.className = 'option-subtitle';
+          subtitle.textContent = item.subtitle || item.id;
+
+          content.append(title, subtitle);
+          label.append(input, content);
+          container.appendChild(label);
+        });
+      }
+
+      function renderPickers() {
+        renderTriggerGroupSelect();
+
+        const targetOptions = buildTargetGroupOptions();
+        renderCheckboxList(
+          targetGroupsList,
+          targetOptions,
+          state.config.TARGET_GROUP_IDS,
+          state.status.connectionStatus === 'Connected'
+            ? 'לא נמצאו קבוצות יעד זמינות כרגע.'
+            : 'קבוצות היעד יוצגו כאן מיד אחרי שהבוט יתחבר.',
+          'TARGET_GROUP_IDS',
+          (selectedValues, item) => selectedValues.includes(item.id)
+        );
+
+        const contactOptions = buildContactOptions();
+        renderCheckboxList(
+          authorizedContactsList,
+          contactOptions,
+          state.config.AUTHORIZED_NUMBERS,
+          state.status.connectionStatus === 'Connected'
+            ? 'לא נמצאו אנשי קשר זמינים כרגע.'
+            : 'אנשי הקשר יוצגו כאן מיד אחרי שהבוט יתחבר.',
+          'AUTHORIZED_NUMBERS',
+          (selectedValues, item) => hasIdentityMatch(selectedValues, item.id) || selectedValues.includes(item.id)
+        );
+
+        if (state.status.connectionStatus === 'Connected') {
+          setTextContent(targetsState, targetOptions.length ? `${state.groups.length} קבוצות זמינות לבחירה` : 'אין כרגע קבוצות להצגה');
+          setTextContent(contactsState, contactOptions.length ? `${state.contacts.length} אנשי קשר זמינים לבחירה` : 'אין כרגע אנשי קשר להצגה');
+        } else {
+          setTextContent(targetsState, 'היעדים נטענים רק כשהבוט מחובר');
+          setTextContent(contactsState, 'אנשי הקשר נטענים רק כשהבוט מחובר');
+        }
+      }
+
+      function renderConfig() {
+        postToStatus.checked = Boolean(state.config.POST_TO_STATUS);
+        renderPickers();
+      }
+
+      async function loadConfig() {
+        const response = await fetch('/api/config');
+        const data = await response.json();
+        state.config = {
+          ...DEFAULT_CONFIG,
+          ...data,
+          AUTHORIZED_NUMBERS: Array.isArray(data.AUTHORIZED_NUMBERS) ? data.AUTHORIZED_NUMBERS : [],
+          TARGET_GROUP_IDS: Array.isArray(data.TARGET_GROUP_IDS) ? data.TARGET_GROUP_IDS : []
+        };
+        renderConfig();
+      }
+
+      async function loadStatus() {
+        if (state.statusPolling) {
+          return;
+        }
+
+        state.statusPolling = true;
+
+        try {
+          const response = await fetch('/api/status');
+          const data = await response.json();
+          const previousStatus = state.status.connectionStatus;
+          state.status = data;
+
+          if (previousStatus !== 'Connected' && data.connectionStatus === 'Connected') {
+            state.directoryAttemptedSinceConnect = false;
+          }
+
+          if (previousStatus === 'Connected' && data.connectionStatus !== 'Connected') {
+            state.directoryLoaded = false;
+            state.directoryAttemptedSinceConnect = false;
+          }
+
+          renderStatus();
+
+          if (
+            data.connectionStatus === 'Connected' &&
+            (!state.directoryLoaded && !state.directoryAttemptedSinceConnect || previousStatus !== 'Connected')
+          ) {
+            await refreshDirectoryData({ silent: true });
+          } else if (data.connectionStatus !== 'Connected') {
+            renderConfig();
+          }
+        } catch (error) {
+          state.status = {
+            connectionStatus: 'Disconnected',
+            rawWhatsappState: 'STATUS_ENDPOINT_ERROR',
+            lastError: error.message || 'שגיאה בקריאת מצב הבוט.'
+          };
+          renderStatus();
+        } finally {
+          state.statusPolling = false;
+        }
+      }
+
+      async function fetchJson(url) {
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          let errorMessage = `Request failed: ${response.status}`;
+
+          try {
+            const payload = await response.json();
+            errorMessage = payload.error || errorMessage;
+          } catch {
+            // Ignore JSON parsing failure and keep the fallback message.
+          }
+
+          throw new Error(errorMessage);
+        }
+
+        return response.json();
+      }
+
+      async function refreshDirectoryData({ silent = false } = {}) {
+        if (state.status.connectionStatus !== 'Connected') {
+          if (!silent) {
+            showSaveMessage('אפשר לרענן נתונים רק כשהבוט מחובר ל-WhatsApp.', true);
+          }
+          return;
+        }
+
+        if (state.directoryLoading) {
+          return;
+        }
+
+        state.directoryLoading = true;
+        state.directoryAttemptedSinceConnect = true;
+        renderStatus();
+        renderConfig();
+
+        try {
+          const [groups, contacts] = await Promise.all([fetchJson('/api/groups'), fetchJson('/api/contacts')]);
+          state.groups = Array.isArray(groups) ? groups : [];
+          state.contacts = Array.isArray(contacts) ? contacts : [];
+          state.directoryLoaded = true;
+          renderStatus();
+          renderConfig();
+
+          if (!silent) {
+            showSaveMessage('רשימת הקבוצות ואנשי הקשר עודכנה.', false);
+          }
+        } catch (error) {
+          state.groups = [];
+          state.contacts = [];
+          state.directoryLoaded = false;
+          renderStatus();
+          renderConfig();
+
+          if (!silent) {
+            showSaveMessage(error.message || 'לא ניתן לרענן את הנתונים מ-WhatsApp.', true);
+          }
+        } finally {
+          state.directoryLoading = false;
+          renderStatus();
+          renderConfig();
+        }
+      }
+
+      function getCheckedValues(fieldName) {
+        return [...document.querySelectorAll(`input[name="${fieldName}"]:checked`)].map((input) => input.value);
+      }
+
+      configForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        showSaveMessage('שומר הגדרות...', false);
+
+        try {
+          const response = await fetch('/api/config', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              TRIGGER_GROUP_ID: triggerGroupId.value.trim(),
+              AUTHORIZED_NUMBERS: getCheckedValues('AUTHORIZED_NUMBERS'),
+              TARGET_GROUP_IDS: getCheckedValues('TARGET_GROUP_IDS'),
+              POST_TO_STATUS: postToStatus.checked
+            })
+          });
+
+          const payload = await response.json();
+
+          if (!response.ok || !payload.success) {
+            throw new Error(payload.error || 'שמירת ההגדרות נכשלה.');
+          }
+
+          state.config = {
+            ...DEFAULT_CONFIG,
+            ...payload.config,
+            AUTHORIZED_NUMBERS: payload.config.AUTHORIZED_NUMBERS || [],
+            TARGET_GROUP_IDS: payload.config.TARGET_GROUP_IDS || []
+          };
+
+          renderConfig();
+          showSaveMessage('ההגדרות נשמרו בהצלחה.', false);
+        } catch (error) {
+          showSaveMessage(error.message || 'שמירת ההגדרות נכשלה.', true);
+        }
+      });
+
+      refreshDataButton.addEventListener('click', () => {
+        refreshDirectoryData();
+      });
+
+      async function initializeDashboard() {
+        renderStatus();
+        renderConfig();
+
+        try {
+          await loadConfig();
+        } catch (error) {
+          showSaveMessage(error.message || 'לא ניתן לטעון את config.json.', true);
+        }
+
+        await loadStatus();
+        window.setInterval(loadStatus, 5000);
+      }
+
+      initializeDashboard();
+    </script>
+  </body>
+</html>

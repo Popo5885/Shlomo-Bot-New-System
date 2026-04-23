@@ -1,0 +1,18 @@
+{
+  "name": "whatsapp-automation-dashboard",
+  "version": "1.0.0",
+  "description": "WhatsApp automation bot with an Express management dashboard",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@whiskeysockets/baileys": "^7.0.0-rc.9",
+    "express": "^4.21.2",
+    "pino": "^10.3.1",
+    "qrcode": "^1.5.4"
+  }
+}

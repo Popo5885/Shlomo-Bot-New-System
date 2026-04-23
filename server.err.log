@@ -1,0 +1,15 @@
+C:\dev2\bot status\node_modules\puppeteer-core\lib\cjs\puppeteer\cdp\ExecutionContext.js:457
+        throw new Error('Execution context was destroyed, most likely because of a navigation.');
+              ^
+
+Error: Execution context was destroyed, most likely because of a navigation.
+    at rewriteError (C:\dev2\bot status\node_modules\puppeteer-core\lib\cjs\puppeteer\cdp\ExecutionContext.js:457:15)
+    at async #evaluate (C:\dev2\bot status\node_modules\puppeteer-core\lib\cjs\puppeteer\cdp\ExecutionContext.js:340:64)
+    at async ExecutionContext.evaluate (C:\dev2\bot status\node_modules\puppeteer-core\lib\cjs\puppeteer\cdp\ExecutionContext.js:277:16)
+    at async IsolatedWorld.evaluate (C:\dev2\bot status\node_modules\puppeteer-core\lib\cjs\puppeteer\cdp\IsolatedWorld.js:105:16)
+    at async CdpFrame.evaluate (C:\dev2\bot status\node_modules\puppeteer-core\lib\cjs\puppeteer\api\Frame.js:362:20)
+    at async CdpPage.evaluate (C:\dev2\bot status\node_modules\puppeteer-core\lib\cjs\puppeteer\api\Page.js:830:20)
+    at async Client.inject (C:\dev2\bot status\node_modules\whatsapp-web.js\src\Client.js:106:19)
+    at async C:\dev2\bot status\node_modules\whatsapp-web.js\src\Client.js:383:13
+
+Node.js v24.14.0
